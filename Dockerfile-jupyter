@@ -1,0 +1,21 @@
+# docker build -t jupyter:v1.1 -f Dockerfile-jupyter ./
+FROM python:3.7.9
+
+RUN apt -y update 
+RUN apt -y install mariadb-client
+RUN apt -y install vim
+RUN python -m pip install --upgrade pip
+RUN pip install jupyter
+RUN pip install matplotlib
+
+RUN jupyter notebook --generate-config --allow-root
+RUN echo "c.NotebookApp.base_url = '/jupyter'" >> /root/.jupyter/jupyter_notebook_config.py
+RUN echo "c.NotebookApp.password = u'sha1:6a3f528eec40:6e896b6e4828f525a6e20e5411cd1c8075d68619'" >> /root/.jupyter/jupyter_notebook_config.py
+RUN echo "c.NotebookApp.ip = '0.0.0.0'" >> /root/.jupyter/jupyter_notebook_config.py
+RUN echo "c.NotebookApp.notebook_dir = '/home/workspace'" >> /root/.jupyter/jupyter_notebook_config.py
+RUN echo "c.NotebookApp.allow_root = True" >> /root/.jupyter/jupyter_notebook_config.py
+RUN echo "c.NotebookApp.open_browser = False" >> /root/.jupyter/jupyter_notebook_config.py
+RUN echo "c.NotebookApp.port = 8888" >> /root/.jupyter/jupyter_notebook_config.py
+
+CMD ["jupyter", "notebook"]
+
